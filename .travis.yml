@@ -3,7 +3,8 @@ python:
   - "2.6"
   - "2.7"
 install:
-  - python setup.py install
+  - pip install .
+  - pip install mysql-python
 before_script:
   - mysql -e 'create database test_app;'
 script: nosetests
