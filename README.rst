@@ -1,6 +1,6 @@
 pwmd
 =====================
-Multi Database Support For PeeWee. Now only support mysql.
+Master/Slave Support For PeeWee. Now only support mysql.
 
 
 Usage

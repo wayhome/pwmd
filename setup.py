@@ -11,7 +11,7 @@ def read_file(*path):
 
 setup(name='pwmd',
       version=version,
-      description="Multi Database Support For PeeWee",
+      description="Master Slave Support For PeeWee",
       long_description=read_file("README.rst"),
       classifiers=[],  # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       keywords='multi database orm peewee',
