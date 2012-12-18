@@ -1,6 +1,6 @@
 pwmd
 =====================
-Master/Slave Support For PeeWee. Now only support mysql. 
+Master/Slave Support For `PeeWee <http://peewee.readthedocs.org/>`_. Now only support mysql. 
 
 The source code is locate at `github <https://github.com/youngking/pwmd>`_ .
 
