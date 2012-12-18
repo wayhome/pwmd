@@ -1,6 +1,9 @@
 pwmd
 =====================
-Master/Slave Support For PeeWee. Now only support mysql.
+Master/Slave Support For PeeWee. Now only support mysql. 
+
+.. image:: https://travis-ci.org/youngking/pwmd.png?branch=master
+   :alt: Build Status
 
 
 Usage
@@ -26,3 +29,4 @@ Usage
         name = CharField()
         birthday = DateField()
         is_relative = BooleanField()
+
