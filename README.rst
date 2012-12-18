@@ -5,6 +5,8 @@ Master/Slave Support For PeeWee. Now only support mysql.
 .. image:: https://travis-ci.org/youngking/pwmd.png?branch=master
    :alt: Build Status
 
+The source code is locate at `github <https://github.com/youngking/pwmd>`_ .
+
 
 Usage
 ====================
