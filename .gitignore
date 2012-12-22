@@ -4,6 +4,7 @@ build
 *.egg
 dist
 *.swp
+.*.un~
 tags
 local_config.py
 local_settings.py

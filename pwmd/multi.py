@@ -1,7 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+import logging
 import random
 import threading
+import time
 
 from peewee import Database, MySQLDatabase
 from .url import parse_url
@@ -12,7 +15,18 @@ class MultiDatabase(Database):
     Since we can't access protectd method, must overriten all method that contains `__` atrribute in `Database` .
     """
 
-    def __init__(self, database, threadlocals=False, autocommit=True, **connect_kwargs):
+    def __init__(self, database, threadlocals=False, autocommit=True,
+                 pool_recycle=-1, **connect_kwargs):
+        """
+        :param pool_recycle=-1: this setting causes the pool to recycle
+            connections after the given number of seconds has passed. It
+            defaults to -1, or no timeout. For example, setting to 3600
+            means connections will be recycled after one hour. Note that
+            MySQL in particular will disconnect automatically if no
+            activity is detected on a connection for eight hours (although
+            this is configurable with the MySQLDB connection itself and the
+            server configuration as well).
+        """
         self.deferred = database is None
         self.master = database['master']
         self.slaves = database.get('slaves') or []
@@ -25,6 +39,7 @@ class MultiDatabase(Database):
 
         self._conn_lock = threading.Lock()
         self.autocommit = autocommit
+        self.pool_recycle = pool_recycle
 
     def connect(self):
         with self._conn_lock:
@@ -35,6 +50,7 @@ class MultiDatabase(Database):
             self.__local.slaves = [self._connect(
                 slave, **self.connect_kwargs) for slave in self.slaves]
             self.__local.closed = False
+            self.__local.starttime = time.time()
 
     def _connect(self, database, **kwargs):
         kwargs.update(self.parse_url(database))
@@ -58,6 +74,13 @@ class MultiDatabase(Database):
         return self.__local.conn
 
     def execute_sql(self, sql, params=None, require_commit=True):
+        if (self.pool_recycle > -1 and
+            time.time() - self.__local.starttime > self.pool_recycle):
+            logging.info("Connection %r exceeded timeout; recycling",
+                         self.__local.conn)
+            self.close()
+            self.connect()
+
         if hasattr(self, "_usging"):
             using = self._using
         else:
@@ -67,6 +90,7 @@ class MultiDatabase(Database):
             self.__local.conn = random.choice(self.__local.slaves)
         else:
             self.__local.conn = self.__local.master
+
         return super(MultiDatabase, self).execute_sql(sql, params, require_commit)
 
     def set_autocommit(self, autocommit):
