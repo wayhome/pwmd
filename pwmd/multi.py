@@ -76,8 +76,7 @@ class MultiDatabase(Database):
     def execute_sql(self, sql, params=None, require_commit=True):
         if (self.pool_recycle > -1 and
             time.time() - self.__local.starttime > self.pool_recycle):
-            logging.info("Connection %r exceeded timeout; recycling",
-                         self.__local.conn)
+            logging.info("Connection exceeded timeout; recycling")
             self.close()
             self.connect()
 
