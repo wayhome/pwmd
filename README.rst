@@ -33,3 +33,10 @@ Usage
         birthday = DateField()
         is_relative = BooleanField()
 
+
+You can force use the special db:
+
+::
+
+    with db.using('master'):
+        pass
